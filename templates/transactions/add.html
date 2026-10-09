@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Add Transaction - Smart Expense Tracker</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+
+    <nav class="navbar">
+
+        <a href="{{ url_for('transactions.dashboard') }}">
+            💰 Smart Expense Tracker
+        </a>
+
+        <a href="{{ url_for('transactions.dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('transactions.list_transactions') }}">
+            Transactions
+        </a>
+
+        <a href="{{ url_for('transactions.add_transaction') }}">
+            Add Transaction
+        </a>
+
+        <a href="{{ url_for('auth.logout') }}">
+            Logout
+        </a>
+
+    </nav>
+
+
+    <!-- MAIN CONTENT -->
+
+    <div class="container">
+
+        <div class="card">
+
+            <h1>Add Transaction</h1>
+
+            <p>
+                Record a new income or expense.
+            </p>
+
+
+            <form method="POST">
+
+                {{ form.hidden_tag() }}
+
+
+                <!-- AMOUNT -->
+
+                <p>
+
+                    {{ form.amount.label }}
+
+                    <br>
+
+                    {{ form.amount(
+                        placeholder="Enter amount"
+                    ) }}
+
+                    {% for error in form.amount.errors %}
+
+                        <br>
+
+                        <span>
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </p>
+
+
+                <!-- TYPE -->
+
+                <p>
+
+                    {{ form.type.label }}
+
+                    <br>
+
+                    {{ form.type() }}
+
+                    {% for error in form.type.errors %}
+
+                        <br>
+
+                        <span>
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </p>
+
+
+                <!-- CATEGORY -->
+
+                <p>
+
+                    {{ form.category.label }}
+
+                    <br>
+
+                    {{ form.category(
+                        placeholder="Food, Transport, Shopping..."
+                    ) }}
+
+                    {% for error in form.category.errors %}
+
+                        <br>
+
+                        <span>
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </p>
+
+
+                <!-- DESCRIPTION -->
+
+                <p>
+
+                    {{ form.description.label }}
+
+                    <br>
+
+                    {{ form.description(
+                        rows="4",
+                        cols="40",
+                        placeholder="Optional description"
+                    ) }}
+
+                    {% for error in form.description.errors %}
+
+                        <br>
+
+                        <span>
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </p>
+
+
+                <!-- DATE -->
+
+                <p>
+
+                    {{ form.date.label }}
+
+                    <br>
+
+                    {{ form.date() }}
+
+                    {% for error in form.date.errors %}
+
+                        <br>
+
+                        <span>
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </p>
+
+
+                <!-- SUBMIT -->
+
+                <p>
+
+                    <button
+                        type="submit"
+                        class="btn"
+                    >
+                        ➕ Add Transaction
+                    </button>
+
+                </p>
+
+            </form>
+
+        </div>
+
+
+        <br>
+
+
+        <a
+            class="btn"
+            href="{{ url_for('transactions.list_transactions') }}"
+        >
+            ← Back to Transactions
+        </a>
+
+    </div>
+
+</body>
+
+</html>

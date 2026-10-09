@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Edit Transaction - Smart Expense Tracker</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        /* NAVBAR */
+
+        .navbar {
+            background: #111827;
+            padding: 16px 30px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .navbar a:first-child {
+            margin-right: auto;
+            font-size: 20px;
+        }
+
+        .navbar a:hover {
+            opacity: 0.8;
+        }
+
+        /* CONTAINER */
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        /* HEADER */
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            margin-bottom: 8px;
+            font-size: 32px;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #6b7280;
+        }
+
+        /* CARD */
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        /* FORM */
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 9px;
+            font-size: 15px;
+            background: white;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        /* AMOUNT */
+
+        .amount-input {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        /* TYPE */
+
+        .type-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 8px;
+        }
+
+        .type-option {
+            flex: 1;
+        }
+
+        .type-option input {
+            display: none;
+        }
+
+        .type-option label {
+            display: block;
+            text-align: center;
+            padding: 14px;
+            border: 2px solid #d1d5db;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            background: #f9fafb;
+            transition: 0.2s;
+        }
+
+        .type-option label:hover {
+            border-color: #9ca3af;
+        }
+
+        .type-option input:checked + label {
+            border-color: #2563eb;
+            background: #eff6ff;
+        }
+
+        /* ERRORS */
+
+        .field-error {
+            display: block;
+            margin-top: 6px;
+            color: #dc2626;
+            font-size: 14px;
+        }
+
+        /* BUTTONS */
+
+        .button-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 9px;
+            text-decoration: none;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .btn-secondary:hover {
+            background: #d1d5db;
+        }
+
+        /* INFO */
+
+        .info-box {
+            margin-top: 24px;
+            padding: 16px;
+            border-radius: 10px;
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+            color: #374151;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 650px) {
+
+            .navbar {
+                padding: 15px;
+                gap: 15px;
+            }
+
+            .navbar a:first-child {
+                width: 100%;
+                margin-right: 0;
+            }
+
+            .container {
+                margin: 25px auto;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .page-header h1 {
+                font-size: 27px;
+            }
+
+            .type-options {
+                flex-direction: column;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            .button-row .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+
+    <nav class="navbar">
+
+        <a href="{{ url_for('transactions.dashboard') }}">
+            💰 Smart Expense Tracker
+        </a>
+
+        <a href="{{ url_for('transactions.dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('transactions.list_transactions') }}">
+            Transactions
+        </a>
+
+        <a href="{{ url_for('transactions.add_transaction') }}">
+            Add Transaction
+        </a>
+
+        <a href="{{ url_for('budget.budget') }}">
+            Budget
+        </a>
+
+        <a href="{{ url_for('reports.reports') }}">
+            Reports
+        </a>
+
+        <a href="{{ url_for('auth.logout') }}">
+            Logout
+        </a>
+
+    </nav>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="container">
+
+        <div class="page-header">
+
+            <h1>✏️ Edit Transaction</h1>
+
+            <p>
+                Update the details of your transaction.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+            <form method="POST">
+
+                {{ form.hidden_tag() }}
+
+
+                <!-- AMOUNT -->
+
+                <div class="form-group">
+
+                    {{ form.amount.label }}
+
+                    {{ form.amount(
+                        class="amount-input",
+                        placeholder="0.00",
+                        inputmode="decimal"
+                    ) }}
+
+                    {% for error in form.amount.errors %}
+
+                        <span class="field-error">
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- TYPE -->
+
+                <div class="form-group">
+
+                    {{ form.type.label }}
+
+                    <div class="type-options">
+
+                        <div class="type-option">
+
+                            <input
+                                type="radio"
+                                name="{{ form.type.name }}"
+                                id="income-type"
+                                value="income"
+                                {% if form.type.data == "income" %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <label for="income-type">
+                                💰 Income
+                            </label>
+
+                        </div>
+
+
+                        <div class="type-option">
+
+                            <input
+                                type="radio"
+                                name="{{ form.type.name }}"
+                                id="expense-type"
+                                value="expense"
+                                {% if form.type.data == "expense" %}
+                                    checked
+                                {% endif %}
+                            >
+
+                            <label for="expense-type">
+                                💸 Expense
+                            </label>
+
+                        </div>
+
+                    </div>
+
+
+                    {% for error in form.type.errors %}
+
+                        <span class="field-error">
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- CATEGORY -->
+
+                <div class="form-group">
+
+                    {{ form.category.label }}
+
+                    {{ form.category(
+                        placeholder="Food, Transport, Shopping..."
+                    ) }}
+
+                    {% for error in form.category.errors %}
+
+                        <span class="field-error">
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group">
+
+                    {{ form.description.label }}
+
+                    {{ form.description(
+                        rows="4",
+                        placeholder="Optional description"
+                    ) }}
+
+                    {% for error in form.description.errors %}
+
+                        <span class="field-error">
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- DATE -->
+
+                <div class="form-group">
+
+                    {{ form.date.label }}
+
+                    {{ form.date() }}
+
+                    {% for error in form.date.errors %}
+
+                        <span class="field-error">
+                            {{ error }}
+                        </span>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="button-row">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        ✏️ Update Transaction
+                    </button>
+
+                    <a
+                        href="{{ url_for('transactions.list_transactions') }}"
+                        class="btn btn-secondary"
+                    >
+                        ← Back to Transactions
+                    </a>
+
+                </div>
+
+            </form>
+
+
+            <div class="info-box">
+
+                <strong>💡 Keep your records accurate</strong>
+
+                Make sure the amount, transaction type, category,
+                description, and date are correct before saving.
+
+            </div>
+
+        </div>
+
+    </main>
+
+</body>
+
+</html>

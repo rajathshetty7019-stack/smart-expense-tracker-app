@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My Transactions - Smart Expense Tracker</title>
+
+    <style>
+
+        /* =====================================
+           GLOBAL
+        ===================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f3f4f6;
+
+            color: #111827;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+
+        /* =====================================
+           NAVBAR
+        ===================================== */
+
+        .navbar {
+            background: #1f2937;
+
+            color: white;
+
+            padding: 15px 30px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+
+            flex-wrap: wrap;
+        }
+
+        .navbar a {
+            color: white;
+
+            padding: 8px 10px;
+
+            border-radius: 6px;
+        }
+
+        .navbar a:hover {
+            background: #374151;
+        }
+
+        .navbar-brand {
+            font-size: 18px;
+
+            font-weight: bold;
+
+            margin-right: auto;
+        }
+
+
+        /* =====================================
+           CONTAINER
+        ===================================== */
+
+        .container {
+            max-width: 1200px;
+
+            margin: 30px auto;
+
+            padding: 0 20px;
+        }
+
+
+        /* =====================================
+           PAGE HEADER
+        ===================================== */
+
+        .page-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin-bottom: 25px;
+
+            flex-wrap: wrap;
+        }
+
+        .page-header h1 {
+            margin: 0;
+        }
+
+        .page-header p {
+            margin: 6px 0 0;
+
+            color: #6b7280;
+        }
+
+
+        /* =====================================
+           BUTTONS
+        ===================================== */
+
+        .btn {
+            display: inline-block;
+
+            background: #2563eb;
+
+            color: white;
+
+            padding: 10px 15px;
+
+            border-radius: 7px;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-secondary {
+            background: #4b5563;
+        }
+
+        .btn-secondary:hover {
+            background: #374151;
+        }
+
+        .btn-small {
+            padding: 7px 10px;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================
+           FLASH MESSAGES
+        ===================================== */
+
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+
+        .flash-message {
+            padding: 13px 16px;
+
+            border-radius: 8px;
+
+            margin-bottom: 10px;
+
+            background: #dcfce7;
+
+            color: #166534;
+
+            border-left: 5px solid #16a34a;
+        }
+
+
+        /* =====================================
+           SUMMARY CARDS
+        ===================================== */
+
+        .summary-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 20px;
+
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+        }
+
+        .summary-card h3 {
+            margin: 0 0 10px;
+
+            font-size: 14px;
+
+            color: #6b7280;
+        }
+
+        .summary-amount {
+            font-size: 25px;
+
+            font-weight: bold;
+        }
+
+        .income {
+            color: #16a34a;
+        }
+
+        .expense {
+            color: #dc2626;
+        }
+
+        .balance {
+            color: #2563eb;
+        }
+
+
+        /* =====================================
+           FILTER SECTION
+        ===================================== */
+
+        .filter-card {
+            background: white;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+        }
+
+        .filter-card h2 {
+            margin-top: 0;
+
+            margin-bottom: 15px;
+        }
+
+        .filter-grid {
+            display: grid;
+
+            grid-template-columns:
+                2fr 1fr 1fr;
+
+            gap: 15px;
+        }
+
+        .filter-group label {
+            display: block;
+
+            margin-bottom: 6px;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            color: #374151;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+
+            padding: 10px 12px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+
+            background: white;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+            outline: none;
+
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(37, 99, 235, 0.15);
+        }
+
+
+        /* =====================================
+           TABLE CARD
+        ===================================== */
+
+        .table-card {
+            background: white;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 20px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+        }
+
+        .table-header h2 {
+            margin: 0;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        .transaction-table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 800px;
+        }
+
+        .transaction-table th,
+        .transaction-table td {
+            padding: 13px 15px;
+
+            text-align: left;
+
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .transaction-table th {
+            background: #f9fafb;
+
+            color: #374151;
+
+            font-size: 13px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.3px;
+        }
+
+        .transaction-table tbody tr:hover {
+            background: #f9fafb;
+        }
+
+
+        /* =====================================
+           TRANSACTION TYPE
+        ===================================== */
+
+        .type-badge {
+            display: inline-block;
+
+            padding: 5px 9px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+        .type-income {
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+        .type-expense {
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+
+        /* =====================================
+           AMOUNT
+        ===================================== */
+
+        .amount-income {
+            color: #16a34a;
+
+            font-weight: bold;
+        }
+
+        .amount-expense {
+            color: #dc2626;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================
+           ACTIONS
+        ===================================== */
+
+        .actions {
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            flex-wrap: wrap;
+        }
+
+        .actions form {
+            margin: 0;
+        }
+
+
+        /* =====================================
+           EMPTY STATE
+        ===================================== */
+
+        .empty-state {
+            text-align: center;
+
+            padding: 50px 20px;
+
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            font-size: 45px;
+
+            margin-bottom: 10px;
+        }
+
+        .empty-state h3 {
+            color: #374151;
+
+            margin-bottom: 8px;
+        }
+
+
+        /* =====================================
+           BOTTOM ACTIONS
+        ===================================== */
+
+        .bottom-actions {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 20px;
+
+            flex-wrap: wrap;
+        }
+
+
+        /* =====================================
+           NO FILTER RESULTS
+        ===================================== */
+
+        .no-results {
+            display: none;
+
+            text-align: center;
+
+            padding: 35px;
+
+            color: #6b7280;
+        }
+
+
+        /* =====================================
+           RESPONSIVE
+        ===================================== */
+
+        @media (max-width: 800px) {
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .navbar-brand {
+                width: 100%;
+
+                margin-right: 0;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin: 20px auto;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .page-header {
+                align-items: flex-start;
+            }
+
+            .page-header .btn {
+                width: 100%;
+
+                text-align: center;
+            }
+
+            .bottom-actions .btn {
+                width: 100%;
+
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================
+         NAVIGATION
+    ===================================== -->
+
+    <nav class="navbar">
+
+        <a
+            class="navbar-brand"
+            href="{{ url_for('transactions.dashboard') }}"
+        >
+            💰 Smart Expense Tracker
+        </a>
+
+        <a href="{{ url_for('transactions.dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('transactions.list_transactions') }}">
+            Transactions
+        </a>
+
+        <a href="{{ url_for('transactions.add_transaction') }}">
+            Add Transaction
+        </a>
+
+        <a href="{{ url_for('budget.budget') }}">
+            Budget
+        </a>
+
+        <a href="{{ url_for('reports.reports') }}">
+            Reports
+        </a>
+
+        <a href="{{ url_for('auth.logout') }}">
+            Logout
+        </a>
+
+    </nav>
+
+
+    <!-- =====================================
+         MAIN CONTENT
+    ===================================== -->
+
+    <main class="container">
+
+
+        <!-- PAGE HEADER -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>
+                    My Transactions
+                </h1>
+
+                <p>
+                    View, search, edit, and manage your transactions.
+                </p>
+
+            </div>
+
+
+            <a
+                class="btn"
+                href="{{ url_for('transactions.add_transaction') }}"
+            >
+                ➕ Add Transaction
+            </a>
+
+        </div>
+
+
+        <!-- =====================================
+             FLASH MESSAGES
+        ===================================== -->
+
+        <div class="flash-messages">
+
+            {% with messages =
+                get_flashed_messages(with_categories=true)
+            %}
+
+                {% if messages %}
+
+                    {% for category, message in messages %}
+
+                        <div class="flash-message">
+
+                            {{ message }}
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
+        </div>
+
+
+        <!-- =====================================
+             SUMMARY
+        ===================================== -->
+
+        {% if transactions %}
+
+        <div class="summary-grid">
+
+
+            <!-- TOTAL TRANSACTIONS -->
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Transactions
+                </h3>
+
+                <div
+                    class="summary-amount balance"
+                    id="totalTransactions"
+                >
+                    {{ transactions|length }}
+                </div>
+
+            </div>
+
+
+            <!-- TOTAL INCOME -->
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Income
+                </h3>
+
+                <div
+                    class="summary-amount income"
+                    id="totalIncome"
+                >
+                    ₹0.00
+                </div>
+
+            </div>
+
+
+            <!-- TOTAL EXPENSES -->
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Expenses
+                </h3>
+
+                <div
+                    class="summary-amount expense"
+                    id="totalExpenses"
+                >
+                    ₹0.00
+                </div>
+
+            </div>
+
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =====================================
+             FILTERS
+        ===================================== -->
+
+        {% if transactions %}
+
+        <div class="filter-card">
+
+            <h2>
+                🔎 Find Transactions
+            </h2>
+
+
+            <div class="filter-grid">
+
+
+                <!-- SEARCH -->
+
+                <div class="filter-group">
+
+                    <label for="searchInput">
+                        Search
+                    </label>
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Search category, description, date..."
+                    >
+
+                </div>
+
+
+                <!-- TYPE -->
+
+                <div class="filter-group">
+
+                    <label for="typeFilter">
+                        Type
+                    </label>
+
+                    <select id="typeFilter">
+
+                        <option value="all">
+                            All Types
+                        </option>
+
+                        <option value="income">
+                            Income
+                        </option>
+
+                        <option value="expense">
+                            Expense
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- CATEGORY -->
+
+                <div class="filter-group">
+
+                    <label for="categoryFilter">
+                        Category
+                    </label>
+
+                    <select id="categoryFilter">
+
+                        <option value="all">
+                            All Categories
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =====================================
+             TRANSACTION TABLE
+        ===================================== -->
+
+        <div class="table-card">
+
+
+            <div class="table-header">
+
+                <h2>
+                    Transaction History
+                </h2>
+
+                {% if transactions %}
+
+                <span id="resultCount">
+                    {{ transactions|length }} transactions
+                </span>
+
+                {% endif %}
+
+            </div>
+
+
+            {% if transactions %}
+
+
+            <div class="table-wrapper">
+
+                <table class="transaction-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Category
+                            </th>
+
+                            <th>
+                                Description
+                            </th>
+
+                            <th>
+                                Amount
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="transactionTableBody">
+
+
+                        {% for transaction in transactions %}
+
+                        <tr
+                            class="transaction-row"
+                            data-type="{{ transaction.type|lower }}"
+                            data-category="{{ transaction.category|lower }}"
+                            data-search="
+                                {{ transaction.date }}
+                                {{ transaction.type }}
+                                {{ transaction.category }}
+                                {{ transaction.description or '' }}
+                                {{ transaction.amount }}
+                            "
+                        >
+
+
+                            <!-- DATE -->
+
+                            <td>
+                                {{ transaction.date }}
+                            </td>
+
+
+                            <!-- TYPE -->
+
+                            <td>
+
+                                {% if transaction.type|lower == "income" %}
+
+                                <span
+                                    class="
+                                        type-badge
+                                        type-income
+                                    "
+                                >
+                                    Income
+                                </span>
+
+                                {% else %}
+
+                                <span
+                                    class="
+                                        type-badge
+                                        type-expense
+                                    "
+                                >
+                                    Expense
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- CATEGORY -->
+
+                            <td>
+                                {{ transaction.category }}
+                            </td>
+
+
+                            <!-- DESCRIPTION -->
+
+                            <td>
+                                {{ transaction.description or "-" }}
+                            </td>
+
+
+                            <!-- AMOUNT -->
+
+                            <td>
+
+                                {% if transaction.type|lower == "income" %}
+
+                                <span class="amount-income">
+
+                                    +₹{{
+                                        "%.2f"|format(
+                                            transaction.amount
+                                        )
+                                    }}
+
+                                </span>
+
+                                {% else %}
+
+                                <span class="amount-expense">
+
+                                    -₹{{
+                                        "%.2f"|format(
+                                            transaction.amount
+                                        )
+                                    }}
+
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td>
+
+                                <div class="actions">
+
+
+                                    <!-- EDIT -->
+
+                                    <a
+                                        class="
+                                            btn
+                                            btn-small
+                                            btn-secondary
+                                        "
+                                        href="{{ url_for(
+                                            'transactions.edit_transaction',
+                                            transaction_id=transaction.id
+                                        ) }}"
+                                    >
+                                        ✏️ Edit
+                                    </a>
+
+
+                                    <!-- DELETE -->
+
+                                    <form
+                                        method="POST"
+                                        action="{{ url_for(
+                                            'transactions.delete_transaction',
+                                            transaction_id=transaction.id
+                                        ) }}"
+                                    >
+
+                                        {{ delete_form.hidden_tag() }}
+
+                                        <button
+                                            type="submit"
+                                            class="
+                                                btn
+                                                btn-small
+                                                btn-danger
+                                            "
+                                            onclick="
+                                                return confirm(
+                                                    'Are you sure you want to delete this transaction?'
+                                                );
+                                            "
+                                        >
+                                            🗑️ Delete
+                                        </button>
+
+                                    </form>
+
+
+                                </div>
+
+                            </td>
+
+
+                        </tr>
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <!-- NO FILTER RESULTS -->
+
+            <div
+                class="no-results"
+                id="noResults"
+            >
+                <h3>
+                    No matching transactions
+                </h3>
+
+                <p>
+                    Try changing your search or filters.
+                </p>
+            </div>
+
+
+            {% else %}
+
+
+            <!-- EMPTY STATE -->
+
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
+                    💸
+                </div>
+
+                <h3>
+                    No Transactions Yet
+                </h3>
+
+                <p>
+                    You don't have any transactions yet.
+                </p>
+
+                <br>
+
+                <a
+                    class="btn"
+                    href="{{ url_for('transactions.add_transaction') }}"
+                >
+                    ➕ Add Your First Transaction
+                </a>
+
+            </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- =====================================
+             BOTTOM ACTIONS
+        ===================================== -->
+
+        <div class="bottom-actions">
+
+
+            <a
+                class="btn"
+                href="{{ url_for('transactions.add_transaction') }}"
+            >
+                ➕ Add Transaction
+            </a>
+
+
+            <a
+                class="btn btn-secondary"
+                href="{{ url_for('transactions.export_transactions') }}"
+            >
+                📥 Export CSV
+            </a>
+
+
+        </div>
+
+
+    </main>
+
+
+    <!-- =====================================
+         FILTER JAVASCRIPT
+    ===================================== -->
+
+    {% if transactions %}
+
+    <script>
+
+        const searchInput =
+            document.getElementById("searchInput");
+
+        const typeFilter =
+            document.getElementById("typeFilter");
+
+        const categoryFilter =
+            document.getElementById("categoryFilter");
+
+        const rows =
+            document.querySelectorAll(".transaction-row");
+
+        const noResults =
+            document.getElementById("noResults");
+
+        const resultCount =
+            document.getElementById("resultCount");
+
+
+        /*
+         * =====================================
+         * BUILD CATEGORY FILTER
+         * =====================================
+         */
+
+        const categories = new Set();
+
+
+        rows.forEach(function(row) {
+
+            const category =
+                row.dataset.category;
+
+            if (category) {
+
+                categories.add(category);
+
+            }
+
+        });
+
+
+        Array.from(categories)
+            .sort()
+            .forEach(function(category) {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = category;
+
+                option.textContent =
+                    category.charAt(0).toUpperCase()
+                    + category.slice(1);
+
+                categoryFilter.appendChild(option);
+
+            });
+
+
+        /*
+         * =====================================
+         * FILTER TRANSACTIONS
+         * =====================================
+         */
+
+        function filterTransactions() {
+
+            const search =
+                searchInput.value
+                    .toLowerCase()
+                    .trim();
+
+            const selectedType =
+                typeFilter.value;
+
+            const selectedCategory =
+                categoryFilter.value;
+
+            let visibleCount = 0;
+
+
+            rows.forEach(function(row) {
+
+                const rowSearch =
+                    row.dataset.search
+                        .toLowerCase();
+
+                const rowType =
+                    row.dataset.type;
+
+                const rowCategory =
+                    row.dataset.category;
+
+
+                const matchesSearch =
+                    rowSearch.includes(search);
+
+
+                const matchesType =
+                    selectedType === "all"
+                    || rowType === selectedType;
+
+
+                const matchesCategory =
+                    selectedCategory === "all"
+                    || rowCategory === selectedCategory;
+
+
+                if (
+                    matchesSearch
+                    && matchesType
+                    && matchesCategory
+                ) {
+
+                    row.style.display = "";
+
+                    visibleCount++;
+
+                } else {
+
+                    row.style.display = "none";
+
+                }
+
+            });
+
+
+            /*
+             * UPDATE RESULT COUNT
+             */
+
+            resultCount.textContent =
+                visibleCount
+                + (
+                    visibleCount === 1
+                    ? " transaction"
+                    : " transactions"
+                );
+
+
+            /*
+             * SHOW/HIDE EMPTY FILTER MESSAGE
+             */
+
+            if (visibleCount === 0) {
+
+                noResults.style.display = "block";
+
+            } else {
+
+                noResults.style.display = "none";
+
+            }
+
+        }
+
+
+        /*
+         * =====================================
+         * FILTER EVENTS
+         * =====================================
+         */
+
+        searchInput.addEventListener(
+            "input",
+            filterTransactions
+        );
+
+
+        typeFilter.addEventListener(
+            "change",
+            filterTransactions
+        );
+
+
+        categoryFilter.addEventListener(
+            "change",
+            filterTransactions
+        );
+
+
+        /*
+         * =====================================
+         * CALCULATE TOTALS
+         * =====================================
+         */
+
+        let totalIncome = 0;
+
+        let totalExpenses = 0;
+
+
+        rows.forEach(function(row) {
+
+            const type =
+                row.dataset.type;
+
+            const amountText =
+                row.querySelector(
+                    "td:nth-child(5)"
+                ).textContent
+                    .replace("₹", "")
+                    .replace("+", "")
+                    .replace("-", "")
+                    .trim();
+
+
+            const amount =
+                parseFloat(amountText);
+
+
+            if (!isNaN(amount)) {
+
+                if (type === "income") {
+
+                    totalIncome += amount;
+
+                } else if (type === "expense") {
+
+                    totalExpenses += amount;
+
+                }
+
+            }
+
+        });
+
+
+        /*
+         * DISPLAY TOTALS
+         */
+
+        document.getElementById(
+            "totalIncome"
+        ).textContent =
+            "₹"
+            + totalIncome.toFixed(2);
+
+
+        document.getElementById(
+            "totalExpenses"
+        ).textContent =
+            "₹"
+            + totalExpenses.toFixed(2);
+
+    </script>
+
+    {% endif %}
+
+
+</body>
+
+</html>

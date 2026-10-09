@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Dashboard - Smart Expense Tracker</title>
+
+    <style>
+
+        /* =====================================
+           GLOBAL
+        ===================================== */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f4f6;
+            color: #111827;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+
+        /* =====================================
+           NAVBAR
+        ===================================== */
+
+        .navbar {
+            background: #1f2937;
+            color: white;
+            padding: 15px 30px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .navbar h2 {
+            margin: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        .nav-links a:hover {
+            background: #374151;
+        }
+
+
+        /* =====================================
+           CONTAINER
+        ===================================== */
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+
+        /* =====================================
+           PAGE HEADER
+        ===================================== */
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            gap: 15px;
+            margin-bottom: 20px;
+
+            flex-wrap: wrap;
+        }
+
+        .page-header h1 {
+            margin: 0;
+        }
+
+        .page-header p {
+            margin: 6px 0 0;
+            color: #6b7280;
+        }
+
+
+        /* =====================================
+           BUTTONS
+        ===================================== */
+
+        .btn {
+            display: inline-block;
+
+            background: #2563eb;
+            color: white;
+
+            padding: 10px 16px;
+
+            border-radius: 8px;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 14px;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+
+        /* =====================================
+           SUMMARY CARDS
+        ===================================== */
+
+        .summary-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 20px;
+
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+        }
+
+        .summary-card h3 {
+            margin-top: 0;
+
+            color: #6b7280;
+
+            font-size: 15px;
+        }
+
+        .summary-card .amount {
+            font-size: 28px;
+
+            font-weight: bold;
+
+            margin-top: 10px;
+        }
+
+        .income {
+            color: #16a34a;
+        }
+
+        .expense {
+            color: #dc2626;
+        }
+
+        .balance {
+            color: #2563eb;
+        }
+
+
+        /* =====================================
+           MONTHLY OVERVIEW
+        ===================================== */
+
+        .monthly-overview {
+            background: white;
+
+            padding: 25px;
+
+            margin: 20px 0;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+        }
+
+        .monthly-overview h2 {
+            margin-top: 0;
+        }
+
+        .overview-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, minmax(0, 1fr));
+
+            gap: 15px;
+
+            margin-top: 20px;
+        }
+
+        .overview-card {
+            background: #f9fafb;
+
+            padding: 18px;
+
+            border-radius: 10px;
+
+            border: 1px solid #e5e7eb;
+        }
+
+        .overview-card h3 {
+            margin: 0 0 8px;
+
+            font-size: 14px;
+
+            color: #6b7280;
+        }
+
+        .overview-card .overview-amount {
+            font-size: 22px;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================
+           INCOME VS EXPENSE VISUAL
+        ===================================== */
+
+        .comparison-section {
+            margin-top: 25px;
+        }
+
+        .comparison-section h3 {
+            margin-bottom: 15px;
+        }
+
+        .comparison-row {
+            margin-bottom: 18px;
+        }
+
+        .comparison-label {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 6px;
+
+            font-size: 14px;
+        }
+
+        .comparison-track {
+            width: 100%;
+
+            height: 18px;
+
+            background: #e5e7eb;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+        }
+
+        .comparison-fill {
+            height: 100%;
+
+            border-radius: 10px;
+
+            min-width: 0;
+
+            transition: width 0.4s ease;
+        }
+
+        .comparison-income {
+            background: #16a34a;
+        }
+
+        .comparison-expense {
+            background: #dc2626;
+        }
+
+        .comparison-note {
+            color: #6b7280;
+
+            font-size: 14px;
+
+            margin-top: 12px;
+        }
+
+
+        /* =====================================
+           TOP CATEGORY
+        ===================================== */
+
+        .top-category {
+            margin-top: 25px;
+
+            padding: 18px;
+
+            background: #eff6ff;
+
+            border-left: 5px solid #2563eb;
+
+            border-radius: 8px;
+        }
+
+        .top-category h3 {
+            margin-top: 0;
+        }
+
+        .top-category p {
+            margin-bottom: 0;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================
+           SPENDING ALERTS
+        ===================================== */
+
+        .spending-alerts {
+            background: white;
+
+            padding: 20px;
+
+            margin: 20px 0;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+        }
+
+        .spending-alerts h2 {
+            margin-top: 0;
+
+            margin-bottom: 15px;
+        }
+
+        .spending-alert {
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 12px;
+
+            padding: 15px;
+
+            margin-bottom: 10px;
+
+            border-radius: 8px;
+        }
+
+        .spending-alert:last-child {
+            margin-bottom: 0;
+        }
+
+        .alert-icon {
+            font-size: 22px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-content strong {
+            display: block;
+
+            margin-bottom: 5px;
+        }
+
+        .alert-content p {
+            margin: 0;
+
+            line-height: 1.5;
+        }
+
+
+        /* =====================================
+           ALERT TYPES
+        ===================================== */
+
+        .spending-alert.danger {
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+        .spending-alert.warning {
+            background: #fef3c7;
+
+            color: #92400e;
+        }
+
+        .spending-alert.safe {
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+        .spending-alert.info {
+            background: #dbeafe;
+
+            color: #1e40af;
+        }
+
+
+        /* =====================================
+           BUDGET PROGRESS
+        ===================================== */
+
+        .budget-progress-section {
+            background: white;
+
+            padding: 20px;
+
+            margin: 20px 0;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+        }
+
+        .budget-progress-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 10px;
+
+            font-size: 16px;
+
+            gap: 10px;
+        }
+
+        .budget-progress-bar {
+            width: 100%;
+
+            height: 18px;
+
+            background: #e5e7eb;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+        }
+
+        .budget-progress-fill {
+            height: 100%;
+
+            background: #2563eb;
+
+            border-radius: 10px;
+
+            transition: width 0.4s ease;
+        }
+
+        .budget-progress-section p {
+            color: #6b7280;
+
+            margin-bottom: 0;
+        }
+
+
+        /* =====================================
+           BUDGET STATUS
+        ===================================== */
+
+        .budget-status {
+            padding: 20px;
+
+            margin: 20px 0;
+
+            border-radius: 12px;
+
+            background: white;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+        }
+
+        .budget-status h3 {
+            margin-top: 0;
+        }
+
+        .budget-safe {
+            border-left: 6px solid #16a34a;
+        }
+
+        .budget-warning {
+            border-left: 6px solid #f59e0b;
+        }
+
+        .budget-danger {
+            border-left: 6px solid #dc2626;
+        }
+
+
+        /* =====================================
+           RECENT TRANSACTIONS
+        ===================================== */
+
+        .transactions-section {
+            background: white;
+
+            padding: 20px;
+
+            margin-top: 20px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+        }
+
+        .transactions-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 15px;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+        .transactions-header h2 {
+            margin: 0;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 12px;
+
+            text-align: left;
+
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f9fafb;
+
+            color: #374151;
+        }
+
+        .transaction-expense {
+            color: #dc2626;
+
+            font-weight: bold;
+        }
+
+        .transaction-income {
+            color: #16a34a;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================
+           EMPTY STATE
+        ===================================== */
+
+        .empty-state {
+            text-align: center;
+
+            padding: 30px;
+
+            color: #6b7280;
+        }
+
+
+        /* =====================================
+           RESPONSIVE
+        ===================================== */
+
+        @media (max-width: 800px) {
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .container {
+                margin: 20px auto;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .page-header {
+                align-items: flex-start;
+            }
+
+            .page-header .btn {
+                width: 100%;
+
+                text-align: center;
+            }
+
+            .summary-card .amount {
+                font-size: 24px;
+            }
+
+            .budget-progress-header {
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+            th,
+            td {
+                padding: 9px;
+
+                font-size: 13px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================
+         NAVBAR
+    ===================================== -->
+
+    <nav class="navbar">
+
+        <h2>
+            Smart Expense Tracker
+        </h2>
+
+
+        <div class="nav-links">
+
+            <a href="{{ url_for('transactions.dashboard') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('transactions.list_transactions') }}">
+                Transactions
+            </a>
+
+            <a href="{{ url_for('transactions.add_transaction') }}">
+                Add Transaction
+            </a>
+
+            <a href="{{ url_for('budget.budget') }}">
+                Budget
+            </a>
+
+            <a href="{{ url_for('reports.reports') }}">
+                Reports
+            </a>
+            
+            
+<a href="{{ url_for('recurring.index') }}">
+    Recurring Transactions
+</a>
+
+
+            <a href="{{ url_for('auth.logout') }}">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================
+         MAIN CONTAINER
+    ===================================== -->
+
+    <main class="container">
+
+
+        <!-- =====================================
+             PAGE HEADER
+        ===================================== -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p>
+                    Your financial overview at a glance.
+                </p>
+
+            </div>
+
+            <a
+                class="btn"
+                href="{{ url_for('transactions.add_transaction') }}"
+            >
+                + Add Transaction
+            </a>
+
+        </div>
+
+
+        <!-- =====================================
+             SUMMARY CARDS
+        ===================================== -->
+
+        <div class="summary-grid">
+
+
+            <!-- INCOME -->
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Income
+                </h3>
+
+                <div class="amount income">
+                    ₹{{ "%.2f"|format(total_income) }}
+                </div>
+
+            </div>
+
+
+            <!-- EXPENSES -->
+
+            <div class="summary-card">
+
+                <h3>
+                    Total Expenses
+                </h3>
+
+                <div class="amount expense">
+                    ₹{{ "%.2f"|format(total_expenses) }}
+                </div>
+
+            </div>
+
+
+            <!-- BALANCE -->
+
+            <div class="summary-card">
+
+                <h3>
+                    Balance
+                </h3>
+
+                <div class="amount balance">
+                    ₹{{ "%.2f"|format(balance) }}
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =====================================
+             MONTHLY FINANCIAL OVERVIEW
+        ===================================== -->
+
+        <div class="monthly-overview">
+
+            <h2>
+                📅 This Month
+            </h2>
+
+            <div class="overview-grid">
+
+
+                <!-- MONTHLY INCOME -->
+
+                <div class="overview-card">
+
+                    <h3>
+                        Monthly Income
+                    </h3>
+
+                    <div class="overview-amount income">
+                        ₹{{ "%.2f"|format(monthly_income) }}
+                    </div>
+
+                </div>
+
+
+                <!-- MONTHLY EXPENSES -->
+
+                <div class="overview-card">
+
+                    <h3>
+                        Monthly Expenses
+                    </h3>
+
+                    <div class="overview-amount expense">
+                        ₹{{ "%.2f"|format(monthly_expenses) }}
+                    </div>
+
+                </div>
+
+
+                <!-- MONTHLY SAVINGS -->
+
+                <div class="overview-card">
+
+                    <h3>
+                        Monthly Savings
+                    </h3>
+
+                    <div
+                        class="
+                            overview-amount
+                            {% if monthly_income - monthly_expenses >= 0 %}
+                                income
+                            {% else %}
+                                expense
+                            {% endif %}
+                        "
+                    >
+                        ₹{{
+                            "%.2f"|format(
+                                monthly_income - monthly_expenses
+                            )
+                        }}
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================
+                 INCOME VS EXPENSE COMPARISON
+            ================================= -->
+
+            <div class="comparison-section">
+
+                <h3>
+                    Income vs Expenses
+                </h3>
+
+
+                {% if monthly_income > 0 %}
+
+                    <div class="comparison-row">
+
+                        <div class="comparison-label">
+
+                            <span>
+                                Income
+                            </span>
+
+                            <strong>
+                                ₹{{ "%.2f"|format(monthly_income) }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="comparison-track">
+
+                            <div
+                                class="comparison-fill comparison-income"
+                                style="
+                                    width:
+                                    {{
+                                        [100, 100]|min
+                                    }}%;
+                                "
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="comparison-row">
+
+                        <div class="comparison-label">
+
+                            <span>
+                                Expenses
+                            </span>
+
+                            <strong>
+                                ₹{{ "%.2f"|format(monthly_expenses) }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="comparison-track">
+
+                            <div
+                                class="comparison-fill comparison-expense"
+                                style="
+                                    width:
+                                    {{
+                                        [
+                                            (
+                                                (
+                                                    monthly_expenses
+                                                    / monthly_income
+                                                ) * 100
+                                            ),
+                                            100
+                                        ]|min
+                                    }}%;
+                                "
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    {% if monthly_expenses <= monthly_income %}
+
+                        <p class="comparison-note">
+                            🟢 Your income currently covers
+                            your monthly expenses.
+                        </p>
+
+                    {% else %}
+
+                        <p class="comparison-note">
+                            🔴 Your monthly expenses are
+                            higher than your income.
+                        </p>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <p class="comparison-note">
+                        Add an income transaction to see
+                        your income vs expenses comparison.
+                    </p>
+
+                {% endif %}
+
+
+            </div>
+
+
+            <!-- =================================
+                 TOP SPENDING CATEGORY
+            ================================= -->
+
+            <div class="top-category">
+
+                <h3>
+                    🏆 Spending Focus
+                </h3>
+
+                {% if monthly_expenses > 0 %}
+
+                    {% set category_totals = {} %}
+
+                    {% for transaction in recent_transactions %}
+
+                        {% if transaction.type == "expense" %}
+
+                            {% if transaction.category
+                                  not in category_totals %}
+
+                                {% set _ = category_totals.update({
+                                    transaction.category:
+                                    transaction.amount
+                                }) %}
+
+                            {% else %}
+
+                                {% set _ = category_totals.update({
+                                    transaction.category:
+                                    category_totals[
+                                        transaction.category
+                                    ] + transaction.amount
+                                }) %}
+
+                            {% endif %}
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                    <p>
+                        Review your spending regularly
+                        and use the Reports page for a
+                        detailed category analysis.
+                    </p>
+
+                {% else %}
+
+                    <p>
+                        No expenses have been recorded
+                        for this month yet.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+       
+<!-- ALERTS -->
+{% if spending_alerts %}
+<div class="spending-alerts">
+    <h2>⚠️ Alerts</h2>
+
+    {% for alert in spending_alerts %}
+    <div class="spending-alert info">
+        <div class="alert-icon">💡</div>
+        <div class="alert-content">
+            <p>{{ alert }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+        <!-- =====================================
+             MONTHLY BUDGET
+        ===================================== -->
+
+        <div class="budget-progress-section">
+
+
+            <div class="budget-progress-header">
+
+                <strong>
+                    🎯 Monthly Budget
+                </strong>
+
+                {% if budget_amount > 0 %}
+
+                <span>
+                    ₹{{ "%.2f"|format(monthly_expenses) }}
+                    /
+                    ₹{{ "%.2f"|format(budget_amount) }}
+                </span>
+
+                {% else %}
+
+                <span>
+                    No budget set
+                </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <div class="budget-progress-bar">
+
+                <div
+                    class="budget-progress-fill"
+                    style="
+                        width:
+                        {{
+                            [
+                                budget_used_percentage,
+                                100
+                            ]|min
+                        }}%;
+                    "
+                ></div>
+
+            </div>
+
+
+            {% if budget_amount > 0 %}
+
+            <p>
+
+                {% if budget_remaining >= 0 %}
+
+                    ₹{{ "%.2f"|format(budget_remaining) }}
+                    remaining
+
+                {% else %}
+
+                    ₹{{ "%.2f"|format(budget_remaining|abs) }}
+                    over budget
+
+                {% endif %}
+
+            </p>
+
+            {% else %}
+
+            <p>
+                Set a monthly budget to track your spending.
+            </p>
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- =====================================
+             BUDGET STATUS
+        ===================================== -->
+
+        {% if budget_amount > 0 %}
+
+        <div
+            class="
+                budget-status
+
+                {% if budget_used_percentage >= 100 %}
+                    budget-danger
+
+                {% elif budget_used_percentage >= 80 %}
+                    budget-warning
+
+                {% else %}
+                    budget-safe
+                {% endif %}
+            "
+        >
+
+            <h3>
+                Budget Status
+            </h3>
+
+
+            {% if budget_used_percentage >= 100 %}
+
+            <p>
+                🔴 You have exceeded your monthly budget.
+            </p>
+
+            {% elif budget_used_percentage >= 80 %}
+
+            <p>
+                🟠 You are approaching your monthly budget limit.
+            </p>
+
+            {% else %}
+
+            <p>
+                🟢 Your spending is currently within your budget.
+            </p>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =====================================
+             QUICK ACTIONS
+        ===================================== -->
+
+        <div class="monthly-overview">
+
+            <h2>
+                ⚡ Quick Actions
+            </h2>
+
+            <div class="overview-grid">
+
+                <div class="overview-card">
+
+                    <h3>
+                        Add Transaction
+                    </h3>
+
+                    <p>
+                        Record new income or expenses.
+                    </p>
+
+                    <a
+                        class="btn"
+                        href="{{ url_for('transactions.add_transaction') }}"
+                    >
+                        Add Transaction
+                    </a>
+
+                </div>
+
+
+                <div class="overview-card">
+
+                    <h3>
+                        Manage Budget
+                    </h3>
+
+                    <p>
+                        Set or update your monthly budget.
+                    </p>
+
+                    <a
+                        class="btn"
+                        href="{{ url_for('budget.budget') }}"
+                    >
+                        Open Budget
+                    </a>
+
+                </div>
+
+
+                <div class="overview-card">
+
+                    <h3>
+                        View Reports
+                    </h3>
+
+                    <p>
+                        Analyze your spending and financial health.
+                    </p>
+
+                    <a
+                        class="btn"
+                        href="{{ url_for('reports.reports') }}"
+                    >
+                        Open Reports
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             RECENT TRANSACTIONS
+        ===================================== -->
+
+        <div class="transactions-section">
+
+
+            <div class="transactions-header">
+
+                <h2>
+                    Recent Transactions
+                </h2>
+
+
+                <a
+                    class="btn"
+                    href="{{ url_for('transactions.list_transactions') }}"
+                >
+                    View All
+                </a>
+
+            </div>
+
+
+            {% if recent_transactions %}
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Date
+                            </th>
+
+                            <th>
+                                Type
+                            </th>
+
+                            <th>
+                                Category
+                            </th>
+
+                            <th>
+                                Description
+                            </th>
+
+                            <th>
+                                Amount
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for transaction in recent_transactions %}
+
+                        <tr>
+
+                            <td>
+                                {{ transaction.date }}
+                            </td>
+
+
+                            <td>
+
+                                {% if transaction.type == "income" %}
+
+                                <span class="transaction-income">
+                                    Income
+                                </span>
+
+                                {% else %}
+
+                                <span class="transaction-expense">
+                                    Expense
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <td>
+                                {{ transaction.category }}
+                            </td>
+
+
+                            <td>
+                                {{ transaction.description or "-" }}
+                            </td>
+
+
+                            <td>
+
+                                {% if transaction.type == "income" %}
+
+                                <span class="transaction-income">
+                                    +₹{{ "%.2f"|format(transaction.amount) }}
+                                </span>
+
+                                {% else %}
+
+                                <span class="transaction-expense">
+                                    -₹{{ "%.2f"|format(transaction.amount) }}
+                                </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {% else %}
+
+            <div class="empty-state">
+
+                <p>
+                    No transactions yet.
+                </p>
+
+                <a
+                    class="btn"
+                    href="{{ url_for('transactions.add_transaction') }}"
+                >
+                    Add Your First Transaction
+                </a>
+
+            </div>
+
+            {% endif %}
+
+
+        </div>
+
+
+    </main>
+
+
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+            Smart Expense Tracker
+        {% endblock %}
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+    <nav class="navbar">
+
+        <a href="{{ url_for('index') }}">
+            💰 Smart Expense Tracker
+        </a>
+
+        <a href="{{ url_for('transactions.dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('transactions.list_transactions') }}">
+            Transactions
+        </a>
+
+        <a href="{{ url_for('recurring.index') }}">Recurring Transactions
+
+        </a>
+
+        <a href="{{ url_for('transactions.add_transaction') }}">
+            Add Transaction
+        </a>
+
+        <a href="{{ url_for('budget.budget') }}">
+            Budget
+        </a>
+
+        <a href="{{ url_for('auth.logout') }}">
+            Logout
+        </a>
+
+    </nav>
+
+
+    <main>
+
+        {% with messages = get_flashed_messages(
+            with_categories=true
+        ) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                    <p>
+                        {{ message }}
+                    </p>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        {% block content %}
+
+            <div class="container">
+
+                <div class="card">
+
+                    <h1>
+                        💰 Smart Expense Tracker
+                    </h1>
+
+                    <p>
+                        Personal Finance Management System
+                    </p>
+
+                    <hr>
+
+                    <h2>
+                        ✅ Flask application is working!
+                    </h2>
+
+                    <p>
+                        Database models have been loaded successfully.
+                    </p>
+
+                </div>
+
+            </div>
+
+        {% endblock %}
+
+    </main>
+
+</body>
+
+</html>

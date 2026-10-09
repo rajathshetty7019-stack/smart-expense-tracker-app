@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Register - Smart Expense Tracker</title>
+
+</head>
+
+<body>
+
+    <h1>💰 Smart Expense Tracker</h1>
+
+    <h2>Create an Account</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <p>
+                    {{ message }}
+                </p>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <form method="POST">
+
+        {{ form.hidden_tag() }}
+
+        <p>
+            {{ form.username.label }}
+            <br>
+            {{ form.username() }}
+        </p>
+
+        <p>
+            {{ form.email.label }}
+            <br>
+            {{ form.email() }}
+        </p>
+
+        <p>
+            {{ form.password.label }}
+            <br>
+            {{ form.password() }}
+        </p>
+
+        <p>
+            {{ form.confirm_password.label }}
+            <br>
+            {{ form.confirm_password() }}
+        </p>
+
+        <p>
+            <button type="submit">
+                Register
+            </button>
+        </p>
+
+    </form>
+
+    <p>
+        Already have an account?
+        <a href="{{ url_for('auth.login') }}">
+            Login
+        </a>
+    </p>
+
+</body>
+
+</html>

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Budget - Smart Expense Tracker</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+    <style>
+
+        body {
+            background: #f4f6f8;
+            margin: 0;
+        }
+
+        .budget-page {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px 50px;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            margin-bottom: 8px;
+            font-size: 32px;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #666;
+        }
+
+        .budget-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .budget-card {
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .budget-card h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+
+        .card-description {
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border: 1px solid #d5d9de;
+            border-radius: 8px;
+            font-size: 15px;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+        }
+
+        .amount-input {
+            font-size: 20px !important;
+            font-weight: 600;
+        }
+
+        .error {
+            display: block;
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 6px;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 8px;
+            background: #4f46e5;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background: #4338ca;
+        }
+
+        .budget-period {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .budget-period strong {
+            color: #222;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            padding: 18px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .stat-label {
+            display: block;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .progress-section {
+            margin-top: 10px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .progress-header strong {
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 18px;
+            background: #e5e7eb;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 20px;
+            background: #4f46e5;
+            transition: width 0.3s ease;
+        }
+
+        .status-box {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .status-safe {
+            background: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-warning {
+            background: #fffbeb;
+            color: #b45309;
+            border: 1px solid #fde68a;
+        }
+
+        .status-danger {
+            background: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        .status-neutral {
+            background: #f8fafc;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .info-box {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            color: #475569;
+            font-size: 14px;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            background: #e5e7eb;
+            color: #333;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-button:hover {
+            background: #d1d5db;
+        }
+
+        .flash-message {
+            padding: 13px 16px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            background: #eef2ff;
+            color: #3730a3;
+            border: 1px solid #c7d2fe;
+        }
+
+        @media (max-width: 750px) {
+
+            .budget-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .budget-page {
+                margin-top: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVIGATION -->
+
+    <nav class="navbar">
+
+        <a href="{{ url_for('transactions.dashboard') }}">
+            💰 Smart Expense Tracker
+        </a>
+
+        <a href="{{ url_for('transactions.dashboard') }}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('transactions.list_transactions') }}">
+            Transactions
+        </a>
+
+        <a href="{{ url_for('transactions.add_transaction') }}">
+            Add Transaction
+        </a>
+
+        <a href="{{ url_for('budget.budget') }}">
+            Budget
+        </a>
+
+        <a href="{{ url_for('reports.reports') }}">
+            Reports
+        </a>
+
+        <a href="{{ url_for('auth.logout') }}">
+            Logout
+        </a>
+
+    </nav>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="budget-page">
+
+        <div class="page-header">
+
+            <h1>💰 Monthly Budget</h1>
+
+            <p>
+                Set your monthly spending limit and keep track of your progress.
+            </p>
+
+        </div>
+
+
+        <!-- FLASH MESSAGES -->
+
+        {% with messages = get_flashed_messages(
+            with_categories=true
+        ) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                    <div class="flash-message">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <div class="budget-grid">
+
+
+            <!-- SET BUDGET -->
+
+            <div class="budget-card">
+
+                <h2>🎯 Set Your Budget</h2>
+
+                <p class="card-description">
+                    Set or update your spending budget for a specific month.
+                </p>
+
+
+                <form method="POST">
+
+                    {{ form.hidden_tag() }}
+
+
+                    <!-- AMOUNT -->
+
+                    <div class="form-group">
+
+                        {{ form.amount.label }}
+
+                        {{ form.amount(
+                            class="amount-input",
+                            placeholder="Enter budget amount",
+                            inputmode="decimal"
+                        ) }}
+
+                        {% for error in form.amount.errors %}
+
+                            <span class="error">
+                                {{ error }}
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- MONTH -->
+
+                    <div class="form-group">
+
+                        {{ form.month.label }}
+
+                        {{ form.month() }}
+
+                        {% for error in form.month.errors %}
+
+                            <span class="error">
+                                {{ error }}
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- YEAR -->
+
+                    <div class="form-group">
+
+                        {{ form.year.label }}
+
+                        {{ form.year() }}
+
+                        {% for error in form.year.errors %}
+
+                            <span class="error">
+                                {{ error }}
+                            </span>
+
+                        {% endfor %}
+
+                    </div>
+
+
+                    <!-- SUBMIT -->
+
+                    {{ form.submit(
+                        class="submit-button"
+                    ) }}
+
+                </form>
+
+
+                <div class="info-box">
+
+                    💡 <strong>Tip:</strong>
+                    Choose a realistic monthly limit based on your
+                    usual spending habits.
+
+                </div>
+
+            </div>
+
+
+            <!-- CURRENT BUDGET -->
+
+            <div class="budget-card">
+
+                <h2>📊 Current Month</h2>
+
+                <p class="budget-period">
+
+                    Month:
+
+                    <strong>
+                        {{ current_month }}/{{ current_year }}
+                    </strong>
+
+                </p>
+
+
+                <div class="stat-grid">
+
+                    <div class="stat">
+
+                        <span class="stat-label">
+                            Budget
+                        </span>
+
+                        <span class="stat-value">
+                            ₹{{ "%.2f"|format(budget_amount) }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <span class="stat-label">
+                            Expenses
+                        </span>
+
+                        <span class="stat-value">
+                            ₹{{ "%.2f"|format(current_expenses) }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <span class="stat-label">
+                            Remaining
+                        </span>
+
+                        <span class="stat-value">
+                            ₹{{ "%.2f"|format(remaining) }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="stat">
+
+                        <span class="stat-label">
+                            Used
+                        </span>
+
+                        <span class="stat-value">
+                            {{ "%.1f"|format(percentage) }}%
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <!-- PROGRESS -->
+
+                {% if budget_amount > 0 %}
+
+                    <div class="progress-section">
+
+                        <div class="progress-header">
+
+                            <strong>
+                                Budget Usage
+                            </strong>
+
+                            <strong>
+                                {{ "%.1f"|format(percentage) }}%
+                            </strong>
+
+                        </div>
+
+
+                        <div class="progress-bar">
+
+                            <div
+                                class="progress-fill"
+                                style="width: {{ [percentage, 100]|min }}%;"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+                {% endif %}
+
+
+                <!-- STATUS -->
+
+                {% if current_budget %}
+
+                    {% if remaining < 0 %}
+
+                        <div class="status-box status-danger">
+
+                            🚨 Budget exceeded.
+
+                            <br>
+
+                            You have spent
+                            ₹{{ "%.2f"|format(remaining|abs) }}
+                            more than your budget.
+
+                        </div>
+
+                    {% elif percentage >= 80 %}
+
+                        <div class="status-box status-warning">
+
+                            ⚠️ You have used more than 80% of your budget.
+
+                            <br>
+
+                            Consider monitoring your spending closely.
+
+                        </div>
+
+                    {% else %}
+
+                        <div class="status-box status-safe">
+
+                            ✅ You are within your budget.
+
+                            <br>
+
+                            Keep up the good work!
+
+                        </div>
+
+                    {% endif %}
+
+                {% else %}
+
+                    <div class="status-box status-neutral">
+
+                        ℹ️ No budget has been set for this month.
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- BACK BUTTON -->
+
+        <a
+            class="back-button"
+            href="{{ url_for('transactions.dashboard') }}"
+        >
+            ← Back to Dashboard
+        </a>
+
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Monthly Expense Report</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+
+    <style>
+
+     /* =====================================
+   FINANCIAL HEALTH SCORE
+===================================== */
+
+.financial-health {
+    background: white;
+
+    padding: 25px;
+
+    margin: 20px 0;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 4px 12px
+        rgba(0, 0, 0, 0.08);
+}
+
+.financial-health h2 {
+    margin-top: 0;
+}
+
+.health-score-container {
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    margin-top: 20px;
+}
+
+.health-score {
+    width: 120px;
+
+    height: 120px;
+
+    border-radius: 50%;
+
+    background: #f3f4f6;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    flex-shrink: 0;
+}
+
+.score-number {
+    font-size: 38px;
+
+    font-weight: bold;
+
+    color: #2563eb;
+}
+
+.score-label {
+    color: #6b7280;
+
+    font-size: 14px;
+}
+
+.health-details {
+    flex: 1;
+}
+
+.health-details h3 {
+    margin-top: 0;
+
+    font-size: 22px;
+}
+
+.health-details p {
+    line-height: 1.6;
+
+    color: #4b5563;
+}
+
+.health-excellent {
+    color: #15803d;
+}
+
+.health-good {
+    color: #16a34a;
+}
+
+.health-warning {
+    color: #d97706;
+}
+
+.health-danger {
+    color: #dc2626;
+}
+
+
+@media (max-width: 600px) {
+
+    .health-score-container {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+}
+   
+        /* =====================================
+   SMART SPENDING INSIGHTS
+===================================== */
+
+.smart-insights {
+    background: white;
+    padding: 25px;
+    margin: 20px 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.smart-insights h2 {
+    margin-top: 0;
+}
+
+
+.insight-status {
+    padding: 14px 16px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+
+.insight-status.insight-good {
+    background: #dcfce7;
+    color: #166534;
+}
+
+
+.insight-status.insight-warning {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+
+.insight-status.insight-danger {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+
+.insight-status.insight-neutral {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+
+.insight-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+.insight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 15px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+
+.insight-icon {
+    font-size: 20px;
+}
+
+
+.insight-item p {
+    margin: 0;
+    line-height: 1.5;
+}
+
+
+.smart-recommendation {
+    margin-top: 20px;
+    padding: 18px;
+    background: #eff6ff;
+    border-left: 5px solid #2563eb;
+    border-radius: 8px;
+}
+
+
+.smart-recommendation h3 {
+    margin-top: 0;
+}
+
+
+.smart-recommendation p {
+    margin-bottom: 0;
+    line-height: 1.6;
+}
+
+        /* =====================================
+           REPORT FILTER
+        ===================================== */
+
+        .report-filter {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .report-filter h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        .report-filter form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .report-filter select,
+        .report-filter input {
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .report-filter input {
+            width: 100px;
+        }
+
+
+        /* =====================================
+           REPORT CARDS
+        ===================================== */
+
+        .report-card {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .report-card h2 {
+            margin-top: 0;
+        }
+
+
+        /* =====================================
+           SAVINGS
+        ===================================== */
+
+        .savings-analysis {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .savings-summary {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .savings-summary div {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .savings-summary span {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .savings-summary strong {
+            font-size: 24px;
+        }
+
+        .savings-progress {
+            width: 100%;
+            height: 20px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .savings-progress-fill {
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .savings-progress-fill.savings-excellent {
+            background: #16a34a;
+        }
+
+        .savings-progress-fill.savings-good {
+            background: #2563eb;
+        }
+
+        .savings-progress-fill.savings-warning {
+            background: #f59e0b;
+        }
+
+        .savings-progress-fill.savings-danger {
+            background: #dc2626;
+        }
+
+        .savings-progress-fill.savings-neutral {
+            background: #6b7280;
+        }
+
+        .savings-status {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .savings-status p {
+            margin-bottom: 0;
+        }
+
+        .savings-status.savings-excellent {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .savings-status.savings-good {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .savings-status.savings-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .savings-status.savings-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .savings-status.savings-neutral {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+
+        /* =====================================
+           BUDGET
+        ===================================== */
+
+        .budget-analysis {
+            background: white;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .budget-summary {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .budget-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .budget-item span {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .budget-item strong {
+            font-size: 22px;
+        }
+
+        .budget-percentage {
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .budget-progress {
+            width: 100%;
+            height: 20px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .budget-progress-fill {
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .budget-progress-fill.budget-safe {
+            background: #16a34a;
+        }
+
+        .budget-progress-fill.budget-warning {
+            background: #f59e0b;
+        }
+
+        .budget-progress-fill.budget-danger {
+            background: #dc2626;
+        }
+
+        .budget-progress-fill.budget-neutral {
+            background: #6b7280;
+        }
+
+        .budget-status-box {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .budget-status-box p {
+            margin-bottom: 0;
+        }
+
+        .budget-status-box.budget-safe {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .budget-status-box.budget-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .budget-status-box.budget-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .budget-status-box.budget-neutral {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+
+        /* =====================================
+           INCOME VS EXPENSES
+        ===================================== */
+
+        .comparison-chart {
+            max-width: 750px;
+            margin: 20px auto;
+        }
+
+        .comparison-row {
+            margin-bottom: 25px;
+        }
+
+        .comparison-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .comparison-bar {
+            width: 100%;
+            height: 35px;
+            background: #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-fill {
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        .income-fill {
+            background: #16a34a;
+        }
+
+        .expense-fill {
+            background: #dc2626;
+        }
+
+
+        /* =====================================
+           MONTHLY SPENDING TREND
+        ===================================== */
+
+        .monthly-chart {
+            max-width: 900px;
+            margin: 25px auto;
+        }
+
+        .monthly-row {
+            display: grid;
+            grid-template-columns: 110px 1fr 100px;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .monthly-name {
+            font-weight: 500;
+        }
+
+        .monthly-bar {
+            height: 24px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .monthly-fill {
+            height: 100%;
+            background: #2563eb;
+            border-radius: 6px;
+        }
+
+        .monthly-amount {
+            text-align: right;
+            font-weight: bold;
+        }
+
+
+        /* =====================================
+           CATEGORY DISTRIBUTION
+        ===================================== */
+
+        .category-chart {
+            max-width: 700px;
+            margin: 20px auto;
+        }
+
+        .category-row {
+            margin-bottom: 18px;
+        }
+
+        .category-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .category-bar {
+            width: 100%;
+            height: 25px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .category-fill {
+            height: 100%;
+            background: #7c3aed;
+            border-radius: 6px;
+        }
+
+
+        /* =====================================
+           TABLE
+        ===================================== */
+
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .report-table th,
+        .report-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+        }
+
+        .report-table th {
+            background: #f3f4f6;
+        }
+
+        .percentage {
+            font-weight: bold;
+        }
+
+
+        /* =====================================
+           HIGHEST CATEGORY
+        ===================================== */
+
+        .highest-category {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-left: 6px solid #2563eb;
+        }
+
+        .highest-category h3 {
+            margin-top: 0;
+        }
+
+
+        /* =====================================
+           EMPTY REPORT
+        ===================================== */
+
+        .empty-report {
+            background: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+
+        /* =====================================
+           MOBILE
+        ===================================== */
+
+        @media (max-width: 700px) {
+
+            .monthly-row {
+                grid-template-columns: 80px 1fr 80px;
+                gap: 8px;
+                font-size: 13px;
+            }
+
+            .comparison-label {
+                font-size: 14px;
+            }
+
+            .budget-summary,
+            .savings-summary {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================
+         NAVBAR
+    ===================================== -->
+
+    <nav class="navbar">
+
+        <div class="nav-brand">
+            Smart Expense Tracker
+        </div>
+
+        <div class="nav-links">
+
+            <a href="{{ url_for('transactions.dashboard') }}">
+                Dashboard
+            </a>
+
+            <a href="{{ url_for('transactions.list_transactions') }}">
+                Transactions
+            </a>
+
+            <a href="{{ url_for('transactions.add_transaction') }}">
+                Add Transaction
+            </a>
+
+            <a href="{{ url_for('budget.budget') }}">
+                Budget
+            </a>
+
+            <a href="{{ url_for('reports.reports') }}">
+                Reports
+            </a>
+
+            <a href="{{ url_for('auth.logout') }}">
+                Logout
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =====================================
+         MAIN
+    ===================================== -->
+
+    <main class="container">
+
+        <h1>📊 Monthly Expense Report</h1>
+
+
+        <!-- =====================================
+             MONTH SELECTOR
+        ===================================== -->
+
+        <div class="report-filter">
+
+            <h3>📅 Select Report Month</h3>
+
+            <form
+                method="GET"
+                action="{{ url_for('reports.reports') }}"
+            >
+
+                <select name="month">
+
+                    <option value="1"
+                        {% if selected_month == 1 %}selected{% endif %}>
+                        January
+                    </option>
+
+                    <option value="2"
+                        {% if selected_month == 2 %}selected{% endif %}>
+                        February
+                    </option>
+
+                    <option value="3"
+                        {% if selected_month == 3 %}selected{% endif %}>
+                        March
+                    </option>
+
+                    <option value="4"
+                        {% if selected_month == 4 %}selected{% endif %}>
+                        April
+                    </option>
+
+                    <option value="5"
+                        {% if selected_month == 5 %}selected{% endif %}>
+                        May
+                    </option>
+
+                    <option value="6"
+                        {% if selected_month == 6 %}selected{% endif %}>
+                        June
+                    </option>
+
+                    <option value="7"
+                        {% if selected_month == 7 %}selected{% endif %}>
+                        July
+                    </option>
+
+                    <option value="8"
+                        {% if selected_month == 8 %}selected{% endif %}>
+                        August
+                    </option>
+
+                    <option value="9"
+                        {% if selected_month == 9 %}selected{% endif %}>
+                        September
+                    </option>
+
+                    <option value="10"
+                        {% if selected_month == 10 %}selected{% endif %}>
+                        October
+                    </option>
+
+                    <option value="11"
+                        {% if selected_month == 11 %}selected{% endif %}>
+                        November
+                    </option>
+
+                    <option value="12"
+                        {% if selected_month == 12 %}selected{% endif %}>
+                        December
+                    </option>
+
+                </select>
+
+
+                <input
+                    type="number"
+                    name="year"
+                    value="{{ selected_year }}"
+                    min="2020"
+                    max="2100"
+                >
+
+
+                <button
+                    type="submit"
+                    class="btn"
+                >
+                    View Report
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <p>
+            Expense analysis for
+            <strong>
+                {{ month_name }} {{ selected_year }}
+            </strong>
+        </p>
+
+
+        <!-- =====================================
+             SUMMARY CARDS
+        ===================================== -->
+
+        <div class="dashboard-cards">
+
+            <div class="card">
+
+                <h3>Total Income</h3>
+
+                <div class="amount">
+                    ₹{{ "%.2f"|format(total_income) }}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Total Expenses</h3>
+
+                <div class="amount">
+                    ₹{{ "%.2f"|format(total_expenses) }}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Savings / Balance</h3>
+
+                <div class="amount">
+                    ₹{{ "%.2f"|format(balance) }}
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h3>Categories</h3>
+
+                <div class="amount">
+                    {{ category_expenses|length }}
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- =====================================
+     FINANCIAL HEALTH SCORE
+===================================== -->
+
+<div class="financial-health">
+
+    <h2>
+        ❤️ Financial Health Score
+    </h2>
+
+    <div class="health-score-container">
+
+        <div class="health-score">
+
+            <div class="score-number">
+                {{ financial_health_score }}
+            </div>
+
+            <div class="score-label">
+                / 100
+            </div>
+
+        </div>
+
+
+        <div class="health-details">
+
+            <h3 class="{{ financial_health_class }}">
+                {{ financial_health_status }}
+            </h3>
+
+            <p>
+                Your score is based on your savings,
+                budget usage, spending compared with
+                income, and spending concentration.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+        <!-- =====================================
+             SAVINGS ANALYSIS
+        ===================================== -->
+
+        <div class="savings-analysis">
+
+            <h2>💰 Savings Analysis</h2>
+
+
+            <div class="savings-summary">
+
+                <div>
+
+                    <span>
+                        Savings Rate
+                    </span>
+
+                    <strong>
+                        {{ "%.1f"|format(savings_rate) }}%
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Savings
+                    </span>
+
+                    <strong>
+                        ₹{{ "%.2f"|format(balance) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="savings-progress">
+
+                <div
+                    class="savings-progress-fill {{ savings_status_class }}"
+                    style="width: {{ savings_progress }}%;"
+                ></div>
+
+            </div>
+
+
+            <div class="savings-status {{ savings_status_class }}">
+
+                <strong>
+                    {{ savings_status }}
+                </strong>
+
+                {% if total_income > 0 %}
+
+                <p>
+                    You saved
+                    {{ "%.1f"|format(savings_rate) }}%
+                    of your income in
+                    {{ month_name }} {{ selected_year }}.
+                </p>
+
+                {% else %}
+
+                <p>
+                    Add an income transaction to calculate
+                    your savings rate.
+                </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+        
+        <!-- =====================================
+     SMART SPENDING INSIGHTS
+===================================== -->
+
+<div class="smart-insights">
+
+    <h2>🤖 Smart Spending Insights</h2>
+
+    <div class="insight-status {{ insight_status_class }}">
+        <strong>
+            {{ insight_status }}
+        </strong>
+    </div>
+
+
+    <div class="insight-list">
+
+        {% for insight in smart_insights %}
+
+        <div class="insight-item">
+
+            <span class="insight-icon">
+                💡
+            </span>
+
+            <p>
+                {{ insight }}
+            </p>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <div class="smart-recommendation">
+
+        <h3>
+            🎯 Personalized Recommendation
+        </h3>
+
+        <p>
+            {{ smart_recommendation }}
+        </p>
+
+    </div>
+
+</div>
+
+
+        <!-- =====================================
+             BUDGET VS ACTUAL
+        ===================================== -->
+
+        <div class="budget-analysis">
+
+            <h2>💰 Budget vs Actual Spending</h2>
+
+
+            <div class="budget-summary">
+
+                <div class="budget-item">
+
+                    <span>
+                        Monthly Budget
+                    </span>
+
+                    <strong>
+                        ₹{{ "%.2f"|format(budget_amount) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="budget-item">
+
+                    <span>
+                        Actual Spending
+                    </span>
+
+                    <strong>
+                        ₹{{ "%.2f"|format(total_expenses) }}
+                    </strong>
+
+                </div>
+
+
+                <div class="budget-item">
+
+                    <span>
+                        Remaining
+                    </span>
+
+                    <strong>
+                        ₹{{ "%.2f"|format(budget_remaining) }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            {% if budget_amount > 0 %}
+
+            <div class="budget-percentage">
+
+                {{ "%.1f"|format(budget_used_percentage) }}%
+                of budget used
+
+            </div>
+
+
+            <div class="budget-progress">
+
+                <div
+                    class="budget-progress-fill {{ budget_status_class }}"
+                    style="width: {{ budget_progress }}%;"
+                ></div>
+
+            </div>
+
+
+            <div class="budget-status-box {{ budget_status_class }}">
+
+                <strong>
+                    {{ budget_status }}
+                </strong>
+
+
+                {% if budget_used_percentage >= 100 %}
+
+                <p>
+                    You have exceeded your budget by
+                    ₹{{ "%.2f"|format(
+                        total_expenses - budget_amount
+                    ) }}.
+                </p>
+
+                {% elif budget_used_percentage >= 80 %}
+
+                <p>
+                    You are getting close to your
+                    monthly budget limit.
+                </p>
+
+                {% else %}
+
+                <p>
+                    You still have
+                    ₹{{ "%.2f"|format(budget_remaining) }}
+                    remaining in your budget.
+                </p>
+
+                {% endif %}
+
+            </div>
+
+
+            {% else %}
+
+            <div class="budget-status-box budget-neutral">
+
+                <strong>
+                    No budget set
+                </strong>
+
+                <p>
+                    Set a monthly budget to track your
+                    spending against a limit.
+                </p>
+
+                <a
+                    href="{{ url_for('budget.budget') }}"
+                    class="btn"
+                >
+                    Set Budget
+                </a>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- =====================================
+             INCOME VS EXPENSES
+        ===================================== -->
+
+        <div class="report-card">
+
+            <h2>
+                📊 Income vs Expenses
+            </h2>
+
+
+            {% set comparison_max = [
+                total_income|float,
+                total_expenses|float
+            ]|max %}
+
+
+            <div class="comparison-chart">
+
+
+                <div class="comparison-row">
+
+                    <div class="comparison-label">
+
+                        <span>
+                            Income
+                        </span>
+
+                        <span>
+                            ₹{{ "%.2f"|format(total_income) }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="comparison-bar">
+
+                        {% if comparison_max > 0 %}
+
+                            {% set income_width =
+                                (total_income|float /
+                                comparison_max * 100)
+                            %}
+
+                        {% else %}
+
+                            {% set income_width = 0 %}
+
+                        {% endif %}
+
+
+                        <div
+                            class="comparison-fill income-fill"
+                            style="width: {{ income_width }}%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="comparison-row">
+
+                    <div class="comparison-label">
+
+                        <span>
+                            Expenses
+                        </span>
+
+                        <span>
+                            ₹{{ "%.2f"|format(total_expenses) }}
+                        </span>
+
+                    </div>
+
+
+                    <div class="comparison-bar">
+
+                        {% if comparison_max > 0 %}
+
+                            {% set expense_width =
+                                (total_expenses|float /
+                                comparison_max * 100)
+                            %}
+
+                        {% else %}
+
+                            {% set expense_width = 0 %}
+
+                        {% endif %}
+
+
+                        <div
+                            class="comparison-fill expense-fill"
+                            style="width: {{ expense_width }}%;"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             MONTHLY SPENDING TREND
+        ===================================== -->
+
+        <div class="report-card">
+
+            <h2>
+                📈 Monthly Spending Trend
+            </h2>
+
+            <p>
+                Expense trend for {{ selected_year }}
+            </p>
+
+
+            {% set max_monthly_expense =
+                monthly_expenses|max
+            %}
+
+
+            <div class="monthly-chart">
+
+                {% for index in range(12) %}
+
+                    {% set month_value =
+                        monthly_expenses[index]
+                    %}
+
+
+                    {% if max_monthly_expense > 0 %}
+
+                        {% set month_width =
+                            (month_value /
+                            max_monthly_expense * 100)
+                        %}
+
+                    {% else %}
+
+                        {% set month_width = 0 %}
+
+                    {% endif %}
+
+
+                    <div class="monthly-row">
+
+                        <div class="monthly-name">
+
+                            {{ monthly_labels[index] }}
+
+                        </div>
+
+
+                        <div class="monthly-bar">
+
+                            <div
+                                class="monthly-fill"
+                                style="width: {{ month_width }}%;"
+                            ></div>
+
+                        </div>
+
+
+                        <div class="monthly-amount">
+
+                            ₹{{ "%.2f"|format(month_value) }}
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        {% if category_expenses %}
+
+
+        <!-- =====================================
+             CATEGORY DISTRIBUTION
+        ===================================== -->
+
+        <div class="report-card">
+
+            <h2>
+                🍩 Expense Distribution by Category
+            </h2>
+
+
+            {% set max_category_expense =
+                category_expenses.values()|max
+            %}
+
+
+            <div class="category-chart">
+
+                {% for category, amount in category_expenses.items() %}
+
+                    {% if max_category_expense > 0 %}
+
+                        {% set category_width =
+                            (amount|float /
+                            max_category_expense|float * 100)
+                        %}
+
+                    {% else %}
+
+                        {% set category_width = 0 %}
+
+                    {% endif %}
+
+
+                    <div class="category-row">
+
+                        <div class="category-label">
+
+                            <span>
+                                {{ category }}
+                            </span>
+
+                            <span>
+                                ₹{{ "%.2f"|format(amount) }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="category-bar">
+
+                            <div
+                                class="category-fill"
+                                style="width: {{ category_width }}%;"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================
+             CATEGORY TABLE
+        ===================================== -->
+
+        <div class="report-card">
+
+            <h2>
+                📋 Category-wise Expenses
+            </h2>
+
+
+            <table class="report-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Category
+                        </th>
+
+                        <th>
+                            Amount
+                        </th>
+
+                        <th>
+                            Percentage
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for category, amount in category_expenses.items() %}
+
+                    <tr>
+
+                        <td>
+                            {{ category }}
+                        </td>
+
+                        <td>
+                            ₹{{ "%.2f"|format(amount) }}
+                        </td>
+
+                        <td class="percentage">
+
+                            {% if total_expenses > 0 %}
+
+                                {{ "%.1f"|format(
+                                    (amount / total_expenses) * 100
+                                ) }}%
+
+                            {% else %}
+
+                                0%
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- =====================================
+             HIGHEST CATEGORY
+        ===================================== -->
+
+        {% set highest_category =
+            category_expenses|dictsort(
+                by="value",
+                reverse=true
+            )|first
+        %}
+
+
+        {% if highest_category %}
+
+        <div class="highest-category">
+
+            <h3>
+                🔥 Highest Spending Category
+            </h3>
+
+            <p>
+
+                Your highest spending category is
+
+                <strong>
+                    {{ highest_category[0] }}
+                </strong>
+
+                with total expenses of
+
+                <strong>
+                    ₹{{ "%.2f"|format(highest_category[1]) }}
+                </strong>.
+
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+        {% else %}
+
+
+        <!-- =====================================
+             NO EXPENSES
+        ===================================== -->
+
+        <div class="empty-report">
+
+            <h2>
+                No expenses found
+            </h2>
+
+            <p>
+
+                There are no expense transactions
+                for {{ month_name }} {{ selected_year }}.
+
+            </p>
+
+            <a
+                href="{{ url_for('transactions.add_transaction') }}"
+                class="btn"
+            >
+                ➕ Add Transaction
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =====================================
+             BACK TO DASHBOARD
+        ===================================== -->
+
+        <div style="margin: 30px 0;">
+
+            <a
+                href="{{ url_for('transactions.dashboard') }}"
+                class="btn"
+            >
+                ← Back to Dashboard
+            </a>
+
+        </div>
+
+
+    </main>
+
+
+</body>
+
+</html>
