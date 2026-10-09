@@ -121,3 +121,15 @@ GitHub: [@rajathshetty7019-stack](https://github.com/rajathshetty7019-stack)
 ## 📄 License
 
 No license has been selected yet. Unless a license is added, the default copyright rules apply to this code. Add an appropriate open-source license if you want to permit others to reuse it.
+
+
+## 📸 Screenshots
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Budget Management
+![Budgets](screenshots/budgets.png)
+
+### Financial Reports
+![Reports](screenshots/reports.png)
